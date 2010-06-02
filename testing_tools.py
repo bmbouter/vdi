@@ -3,8 +3,8 @@ from datetime import datetime
 
 from vdi.models import Instance, Application
 
-import core
-log = core.log.getLogger()
+from opus.lib import log
+log = log.getLogger()
 
 from cost_tools import convert_to_date_time
 from app_cluster_tools import AppCluster

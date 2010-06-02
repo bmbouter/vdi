@@ -6,9 +6,6 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required, permission_required
 
-from core.ssh_tools import HostNotConnectableError , NodeUtil
-from core import osutils
-
 from subprocess import Popen, PIPE
 from random import choice, randint
 import string
@@ -24,10 +21,11 @@ import os
 from vdi.models import Application, Instance, UserExperience
 from vdi.forms import InstanceForm, UserFeedbackForm
 from vdi.app_cluster_tools import AppCluster, NoHostException
-from vdi import connection_tools
-import core
-log = core.log.getLogger()
+import connection_tools
 import cost_tools
+
+from opus.lib import osutils, log
+log = log.getLogger()
 
 @login_required
 def applicationLibrary(request):

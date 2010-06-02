@@ -1,9 +1,9 @@
 from vdi.models import Instance
-import core
-log = core.log.getLogger()
+from opus.lib import log
+log = log.getLogger()
+
 from django.conf import settings
 from django.db.models.query import QuerySet
-from vdi.models import Instance
 
 from deltacloud import Deltacloud
 deltacloud = Deltacloud(settings.DELTACLOUD_USERNAME,

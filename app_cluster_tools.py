@@ -1,9 +1,9 @@
 from vdi.models import Application, Instance
-import core
-log = core.log.getLogger()
+from opus.lib import log
+log = log.getLogger()
 from vdi import deltacloud_tools
-from core.ssh_tools import HostNotConnectableError, NodeUtil
-from core import osutils
+from opus.lib.ssh_tools import HostNotConnectableError
+from opus.lib import osutils
 
 from django.conf import settings
 from django.db.models import Q

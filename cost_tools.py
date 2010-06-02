@@ -2,8 +2,8 @@ import math
 from datetime import datetime
 import datetime
 
-import core
-log = core.log.getLogger()
+from opus.lib import log
+log = log.getLogger()
 from vdi.app_cluster_tools import AppCluster
 from vdi.models import Instance
 

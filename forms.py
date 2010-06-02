@@ -7,8 +7,8 @@ from django.utils.safestring import mark_safe
 from datetime import datetime, timedelta
 
 from vdi.models import Instance, UserFeedback
-import core
-log = core.log.getLogger()
+from opus.lib import log
+log = log.getLogger()
 
 class InstanceForm(forms.ModelForm):
 

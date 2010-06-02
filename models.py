@@ -6,7 +6,7 @@ from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 
-from core import log
+from opus.lib import log
 log = log.getLogger()
 
 class Application(models.Model):
