@@ -24,5 +24,6 @@ def create_application_permission(sender, instance, **kwargs):
 
 
 def delete_application_permission(sender, instance, **kwargs):
-    perm = Permission.objects.get(codename='use_%s' % instance.name)
+    ct = ContentType.objects.get(model='application', app_label='vdi')
+    perm = Permission.objects.get(codename='use_%s' % instance.name, content_type=ct)
     perm.delete()
