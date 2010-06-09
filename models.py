@@ -2,9 +2,13 @@ from datetime import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import signals
 
 from opus.lib import log
 log = log.getLogger()
+
+from vdi.signals import create_application_permission, delete_application_permission
+
 
 class Application(models.Model):
     name = models.CharField(max_length=64) # Pretty name of the application
@@ -28,6 +32,7 @@ class Application(models.Model):
 
     def __repr__(self):
         return self.name
+
 
 class Instance(models.Model):
     instanceId = models.CharField(max_length=32, unique=True)
@@ -54,6 +59,7 @@ class Instance(models.Model):
     def __repr__(self):
         return self.instanceId
 
+
 class UserExperience(models.Model):
     user = models.ForeignKey(User)
     application = models.ForeignKey(Application)
@@ -62,8 +68,13 @@ class UserExperience(models.Model):
     connection_opened = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
     connection_closed = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
 
+
 class UserFeedback(models.Model):
     application = models.ForeignKey(Application)
     comment = models.TextField("Please leave any comments", blank=True)
     responsiveness = models.IntegerField()
     load_time = models.IntegerField()
+
+
+signals.pre_save.connect(create_application_permission, sender=Application)
+signals.post_delete.connect(delete_application_permission, sender=Application)

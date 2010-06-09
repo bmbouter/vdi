@@ -239,6 +239,6 @@ def calculate_cost(request, start_date, end_date):
 
 def user_feedback(request):
     form = UserFeedbackForm()
-    return render_to_response('vdi/user-feedback.html',
+    return render_to_response('vdi/user_feedback.html',
         {'form' : form},
         context_instance=RequestContext(request))

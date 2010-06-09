@@ -1,13 +1,9 @@
-from django.db.models import signals
 from django.contrib.auth.models import Permission
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 
 from opus.lib import log
 log = log.getLogger()
-
-signals.pre_save.connect(create_application_permission, sender=Application)
-signals.post_delete.connect(delete_application_permission, sender=Application)
 
 
 def create_application_permission(sender, instance, **kwargs):
@@ -23,10 +19,10 @@ def create_application_permission(sender, instance, **kwargs):
         log.debug("No permission")
         log.debug('Use %s' % instance.name)
         log.debug('vdi.use_%s' % instance.name)
-        ct = ContentType.objects.get(model='application')
+        ct = ContentType.objects.get(model='application', app_label='vdi')
         perm = Permission.objects.create(name='Use %s' % instance.name, content_type = ct, codename='use_%s' % instance.name)
+
 
 def delete_application_permission(sender, instance, **kwargs):
     perm = Permission.objects.get(codename='use_%s' % instance.name)
     perm.delete()
-
