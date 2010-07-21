@@ -4,15 +4,15 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import signals
 
-from opus.lib import log
-log = log.getLogger()
+#from opus.lib import log
+#log = log.getLogger()
 
 from vdi.signals import create_application_permission, delete_application_permission
 
 
 class Application(models.Model):
     name = models.CharField(max_length=64) # Pretty name of the application
-    image_id = models.CharField(max_length=32, unique=True) # Image id of the image that the actual application lies on
+    image_id = models.CharField(max_length=32) # Image id of the image that the actual application lies on
     path = models.CharField(max_length=256,blank=True) # Path of the application to be run on the host
     max_concurrent_instances = models.IntegerField(default=0)
     users_per_small = models.IntegerField(default=10)

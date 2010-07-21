@@ -1,23 +1,22 @@
+import math
+from subprocess import Popen, PIPE
+import re
+import socket
+from datetime import timedelta, datetime
+
+from django.http import HttpResponse, HttpResponseRedirect
+from django.conf import settings
+
 from celery.task import PeriodicTask, Task
 from celery.registry import tasks
 from celery.decorators import task
+
+from opus.lib import osutils
 
 from vdi.models import Application, Instance
 from vdi.app_cluster_tools import AppCluster
 from vdi import user_experience_tools
 from vdi import deltacloud_tools
-from core import osutils
-
-import math
-from subprocess import Popen, PIPE
-import re
-import socket
-
-from datetime import timedelta, datetime
-import core
-log = core.log.getLogger()
-from django.http import HttpResponse, HttpResponseRedirect
-from django.conf import settings
 
 class ScaleScheduler(PeriodicTask):
 
@@ -28,13 +27,17 @@ class ScaleScheduler(PeriodicTask):
             app.to_be_run_at = datetime.now() + timedelta(seconds=app.scale_interarrival)
             app.save()
             Scale.delay(app)
-        return (False, self.timedelta_seconds(self.run_every))
+        return (False, self.timedelta_seconds(ScaleScheduler.run_every.run_every))
 
 tasks.register(ScaleScheduler)
 
 class Scale(Task):
 
     def run(self, app):
+        # Create an instance of the logger
+        from opus.lib.log import getLogger
+        log = getLogger()
+
         # Create the cluster object to help us manage the cluster
         cluster = AppCluster(app.pk)
 

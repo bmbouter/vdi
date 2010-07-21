@@ -3,9 +3,6 @@ from datetime import datetime
 import time
 #import datetime
 
-import core
-log = core.log.getLogger()
-
 from vdi.models import UserExperience
 
 
@@ -68,6 +65,8 @@ def convert_timedelta_to_seconds(timedelta):
 
 
 def process_user_connections(app_node):
+    from opus.lib import log
+    log = log.getLogger()
     user_experience = UserExperience.objects.exclude(connection_closed__isnull=False)
     for user_exp in user_experience:
         for session in app_node.sessions:

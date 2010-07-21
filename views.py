@@ -84,33 +84,33 @@ def connect(request, app_pk=None, conn_type=None):
 
         # Grab the proper osutils object
         osutil_obj = osutils.get_os_object(host.ip, settings.MEDIA_ROOT + str(cluster.app.ssh_key))
-        if osutil_obj.__class__.__name__ == 'Linux':
-            conn_type = 'nx'
         if osutil_obj:    
-            log.warning(request.session)
-            status, error_string = osutil_obj.add_user(request.session['username'], password)
+            status, error_string = osutil_obj.add_user(request.user.username, password)
             if status == False:
                 return HttpResponse(error_string)
-
-            # Add the created user to the Administrator group
-            status = osutil_obj.add_administrator(request.session['username'])
-            if status == False:
-                HttpResponse(error_string)
-            else:
-                log.debug("Added user %s to the 'Administrators' group" % request.session['username'])
         else:
             return HttpResponse('Your server was not reachable')
 
+        if osutil_obj.__class__.__name__ == 'Linux':
+            conn_type = 'nx'
+        elif osutil_obj.__class__.__name__ == 'Windows':
+            # For windows only, ddd the created user to the Remote Desktop Users group
+            status = osutil_obj.enable_rdp_for_user(request.user.username)
+            if status == False:
+                HttpResponse(error_string)
+            else:
+                log.debug("Added user %s to the 'Remote Desktop Users' group" % request.user.username)
+
         # This is a hack for NC WISE only, and should be handled through a more general mechanism
         # TODO refactor this to be more secure
-        rdesktopPid = Popen(["rdesktop","-u",request.session['username'],"-p",password, "-s", cluster.app.path, host.ip], env={"DISPLAY": ":1"}).pid
+        rdesktopPid = Popen(["rdesktop","-u",request.user.username,"-p",password, "-s", cluster.app.path, host.ip], env={"DISPLAY": ":1"}).pid
         # Wait for rdesktop to logon
         sleep(3)
 
         if conn_type == 'rdp':
             user_experience.file_presented = datetime.today()
             user_experience.save()
-            return render_to_response('vdi/connect.html', {'username' : request.session['username'],
+            return render_to_response('vdi/connect.html', {'username' : request.user.username,
                                                         'password' : password,
                                                         'app' : cluster.app,
                                                         'ip' : host.ip},
@@ -122,25 +122,25 @@ def connect(request, app_pk=None, conn_type=None):
             NOTE: There is a vestige of this code in the vdi URLconf
 
             elif conn_type == 'nxweb':
-                return _nxweb(host.ip,request.session["username"],password,cluster.app)
+                return _nxweb(host.ip,user.username,password,cluster.app)
             elif conn_type == 'nx':
                 # TODO -- This url should not be hard coded
-                session_url = 'https://opus-dev.cnl.ncsu.edu:9001/nxproxy/conn_builder?' + urlencode({'dest' : host.ip, 'dest_user' : request.session["username"], 'dest_pass' : password, 'app_path' : cluster.app.path})
+                session_url = 'https://opus-dev.cnl.ncsu.edu:9001/nxproxy/conn_builder?' + urlencode({'dest' : host.ip, 'dest_user' : user.username, 'dest_pass' : password, 'app_path' : cluster.app.path})
                 return HttpResponseRedirect(session_url)
             '''
         elif conn_type == 'rdpweb':
-            tsweb_url = settings.VDI_MEDIA_PREFIX+'TSWeb/'
+            tsweb_url = settings.OPUS_MEDIA_PREFIX+'TSWeb/'
             user_experience.file_presented = datetime.today()
             user_experience.save()
             return render_to_response('vdi/rdpweb.html', {'tsweb_url' : tsweb_url,
                                                     'app' : cluster.app,
                                                     'ip' : host.ip,
-                                                    'username' : request.session['username'],
+                                                    'username' : request.user.username,
                                                     'password' : password})
         elif conn_type == 'nx':
             user_experience.file_presented = datetime.today()
             user_experience.save()
-            return render_to_response('vdi/connect.html', {'username' : request.session['username'],
+            return render_to_response('vdi/connect.html', {'username' : request.user.username,
                                                         'password' : password,
                                                         'app' : cluster.app,
                                                         'ip' : host.ip},
@@ -148,9 +148,9 @@ def connect(request, app_pk=None, conn_type=None):
     elif request.method == 'POST':
         # Handle POST request types
         if conn_type == 'rdp':
-            return _create_rdp_conn_file(request.POST["ip"], request.session['username'], request.POST["password"], cluster.app)
+            return _create_rdp_conn_file(request.POST["ip"], request.user.username, request.POST["password"], cluster.app)
         elif conn_type =='nx':
-            return connection_tools.nx_conn_builder(request.POST["ip"], request.session["username"], request.POST["password"], cluster.app)
+            return connection_tools.nx_conn_builder(request.POST["ip"], request.user.username, request.POST["password"], cluster.app)
 
     '''
 def _nxweb(ip, username, password, app):
@@ -164,7 +164,7 @@ def _nxweb(ip, username, password, app):
 
     # TODO -- These urls should not be hard coded
     session_url = 'https://opus-dev.cnl.ncsu.edu:9001/nxproxy/conn_builder?' + urlencode({'dest' : ip, 'dest_user' : username, 'dest_pass' : password, 'app_path' : app.path, 'nodownload' : 1})
-    wc_url = settings.VDI_MEDIA_PREFIX+'nx-plugin/'
+    wc_url = settings.OPUS_MEDIA_PREFIX+'nx-plugin/'
     return render_to_response('vdi/nxapplet.html', {'wc_url' : wc_url,
                                                 'session_url' : session_url})
     '''
@@ -187,7 +187,7 @@ def _create_rdp_conn_file(ip, username, password, app):
     compression:i:1
     keyboardhook:i:2
     audiomode:i:0
-    redirectdrives:i:0
+    redirectdrives:i:1
     redirectprinters:i:1
     redirectcomports:i:0
     redirectsmartcards:i:1
@@ -195,7 +195,7 @@ def _create_rdp_conn_file(ip, username, password, app):
     autoreconnection enabled:i:1
     username:s:%s
     clear password:s:%s
-    domain:s:NETAPP-A415F33E
+    domain:s:
     alternate shell:s:%s
     authentication level:i:0
     shell working directory:s:

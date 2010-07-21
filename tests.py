@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from vdi.models import UserExperience, Application, Instance
 from vdi import user_experience_tools, cost_tools
 
-import core
-log = core.log.getLogger()
+from opus.lib import log
+log = log.getLogger()
 
 
 class CostToolsTest(TestCase):
