@@ -5,7 +5,7 @@ log = log.getLogger()
 from django.conf import settings
 from django.db.models.query import QuerySet
 
-from opus.lib.prov.deltacloud import Deltacloud
+from opus.lib.prov.deltacloud_old import Deltacloud
 deltacloud = Deltacloud(settings.DELTACLOUD_USERNAME,
                         settings.DELTACLOUD_PASSWORD,
                         settings.DELTACLOUD_API_URI)
