@@ -129,7 +129,7 @@ def connect(request, app_pk=None, conn_type=None):
                 return HttpResponseRedirect(session_url)
             '''
         elif conn_type == 'rdpweb':
-            tsweb_url = settings.OPUS_MEDIA_PREFIX+'TSWeb/'
+            tsweb_url = '/media/vdi/TSWeb/'
             user_experience.file_presented = datetime.today()
             user_experience.save()
             return render_to_response('vdi/rdpweb.html', {'tsweb_url' : tsweb_url,
@@ -164,7 +164,7 @@ def _nxweb(ip, username, password, app):
 
     # TODO -- These urls should not be hard coded
     session_url = 'https://opus-dev.cnl.ncsu.edu:9001/nxproxy/conn_builder?' + urlencode({'dest' : ip, 'dest_user' : username, 'dest_pass' : password, 'app_path' : app.path, 'nodownload' : 1})
-    wc_url = settings.OPUS_MEDIA_PREFIX+'nx-plugin/'
+    wc_url = '/media/vdi/nx-plugin/'
     return render_to_response('vdi/nxapplet.html', {'wc_url' : wc_url,
                                                 'session_url' : session_url})
     '''

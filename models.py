@@ -39,11 +39,11 @@ class Instance(models.Model):
     application = models.ForeignKey('Application')
     priority = models.IntegerField()
     STATUS_CHOICES = (
-        (u'1', u'booting'),
-        (u'2', u'active'),
-        (u'3', u'maintenance'),
-        (u'4', u'shutting-down'),
-        (u'5', u'deleted'),
+        (1, u'booting'),
+        (2, u'active'),
+        (3, u'maintenance'),
+        (4, u'shutting-down'),
+        (5, u'deleted'),
     )
     state = models.IntegerField(max_length=2, choices=STATUS_CHOICES, default=1)
     ip = models.IPAddressField(blank=True,null=True)

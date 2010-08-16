@@ -12,6 +12,7 @@ from celery.registry import tasks
 from celery.decorators import task
 
 from opus.lib import osutils
+from opus.lib.ssh_tools import HostNotConnectableError
 
 from vdi.models import Application, Instance
 from vdi.app_cluster_tools import AppCluster
