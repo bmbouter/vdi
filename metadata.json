@@ -1,0 +1,10 @@
+{
+"settings": {
+    "FILE_UPLOAD_PERMISSIONS": "0600",
+    "DEFAULT_CONNECTION_PROTOCOL": "rdp"
+},
+"usersettings": [
+    ["MINIMUM_RESERVATION_LEN", "Minimum Reservation Length.  The minimum length of a reservation in minutes", 15],
+    ["USER_WAITING_PAGE_RELOAD_TIME", "User Waiting Page Reload Time, This is in seconds.", 15]
+    ]
+}
