@@ -3,12 +3,15 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import signals
+from django.conf import settings
 
 #from opus.lib import log
 #log = log.getLogger()
 
 from vdi.signals import create_application_permission, delete_application_permission
 
+from django.core.files.storage import FileSystemStorage
+fs = FileSystemStorage(location=settings.OPUS_SECURE_UPLOADS)
 
 class Application(models.Model):
     name = models.CharField(max_length=64) # Pretty name of the application
@@ -18,7 +21,7 @@ class Application(models.Model):
     users_per_small = models.IntegerField(default=10)
     cluster_headroom = models.IntegerField(default=0)
     icon_url = models.URLField()
-    ssh_key = models.FileField("SSH Key", upload_to='vdi/sshkeys')
+    ssh_key = models.FileField("SSH Key", upload_to='vdi/sshkeys', storage=fs)
     scale_interarrival = models.IntegerField(default=180)  # The interarrival time of the scale function running
     to_be_run_at = models.DateTimeField(auto_now_add=True)
 

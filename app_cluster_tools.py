@@ -1,7 +1,7 @@
 from vdi.models import Application, Instance
 from opus.lib import log
 log = log.getLogger()
-from vdi import deltacloud_tools
+from vdi import driver_tools
 from opus.lib.ssh_tools import HostNotConnectableError
 from opus.lib import osutils
 
@@ -42,7 +42,7 @@ class AppCluster(object):
             new_node.state = 2
             new_node.priority = self.find_next_priority()
         else:
-            new_instance_id = deltacloud_tools.create_instance(self.app.image_id)
+            new_instance_id = driver_tools.create_instance(self.app.image_id)
             new_priority = self.find_next_priority()
             log.debug('New instance created with id %s and priority %s' % (new_instance_id,new_priority))
             new_node = Instance(instanceId=new_instance_id,application=self.app,priority=new_priority)

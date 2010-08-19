@@ -17,7 +17,7 @@ from opus.lib.ssh_tools import HostNotConnectableError
 from vdi.models import Application, Instance
 from vdi.app_cluster_tools import AppCluster
 from vdi import user_experience_tools
-from vdi import deltacloud_tools
+from vdi import driver_tools
 
 class ScaleScheduler(PeriodicTask):
 
@@ -53,7 +53,7 @@ class Scale(Task):
             user_experience_tools.process_user_connections(osutil_node)
 
         # Handle vms we were waiting on to boot up
-        booting = deltacloud_tools.get_instances(cluster.booting)
+        booting = driver_tools.get_instances(cluster.booting)
         for vm in booting:
             dns_name = vm.public_addresses[0]
             log.debug('ASDF = %s' % dns_name)
@@ -109,7 +109,7 @@ class Scale(Task):
             except HostNotConnectableError:
                 # Ignore this host that doesn't seem to be ssh'able, but log it as an error
                 log.warning('Node %s is NOT sshable and should be looked into.  It is currently waiting to shutdown')
-        deltacloud_tools.terminate_instances(toTerminate)
+        driver_tools.terminate_instances(toTerminate)
 
 
         # Should I scale down?
