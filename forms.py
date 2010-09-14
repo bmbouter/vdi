@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 from vdi.models import Instance, UserFeedback
 from opus.lib import log
-log = log.getLogger()
+log = log.get_logger('vdi')
 
 class InstanceForm(forms.ModelForm):
 

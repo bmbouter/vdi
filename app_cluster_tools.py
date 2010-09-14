@@ -1,6 +1,5 @@
 from vdi.models import Application, Instance
 from opus.lib import log
-log = log.getLogger()
 from vdi import driver_tools
 from opus.lib.ssh_tools import HostNotConnectableError
 from opus.lib import osutils
@@ -11,6 +10,8 @@ import string
 from subprocess import Popen, PIPE
 from re import split
 import datetime
+
+log = log.get_logger('vdi')
 
 class NoHostException(Exception):
     pass

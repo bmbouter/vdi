@@ -13,6 +13,7 @@ from celery.decorators import task
 
 from opus.lib import osutils
 from opus.lib.ssh_tools import HostNotConnectableError
+from opus.lib.log import get_logger
 
 from vdi.models import Application, Instance
 from vdi.app_cluster_tools import AppCluster
@@ -36,8 +37,7 @@ class Scale(Task):
 
     def run(self, app):
         # Create an instance of the logger
-        from opus.lib.log import getLogger
-        log = getLogger()
+        log = get_logger('vdi')
 
         # Create the cluster object to help us manage the cluster
         cluster = AppCluster(app.pk)

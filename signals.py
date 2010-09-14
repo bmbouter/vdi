@@ -2,9 +2,10 @@ from django.contrib.auth.models import Permission
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 
+from opus.lib import log
+log = log.get_logger('vdi')
+
 def create_application_permission(sender, instance, **kwargs):
-    from opus.lib import log
-    log = log.getLogger()
     try:
         app = sender.objects.get(pk=instance.id)
         perm = Permission.objects.get(codename='use_%s' % app.name)

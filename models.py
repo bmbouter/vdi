@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.db.models import signals
 from django.conf import settings
 
-#from opus.lib import log
-#log = log.getLogger()
+from opus.lib import log
+log = log.get_logger('vdi')
 
 from vdi.signals import create_application_permission, delete_application_permission
 

@@ -4,7 +4,7 @@ from datetime import datetime
 from vdi.models import Instance, Application
 
 from opus.lib import log
-log = log.getLogger()
+log = log.get_logger('vdi')
 
 from cost_tools import convert_to_date_time
 from app_cluster_tools import AppCluster

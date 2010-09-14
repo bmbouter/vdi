@@ -3,7 +3,7 @@ from datetime import datetime
 import datetime
 
 from opus.lib import log
-log = log.getLogger()
+log = log.get_logger('vdi')
 from vdi.app_cluster_tools import AppCluster
 from vdi.models import Instance
 

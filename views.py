@@ -25,10 +25,10 @@ import connection_tools
 import cost_tools
 
 from opus.lib import osutils, log
-log = log.getLogger()
 
 @login_required
 def applicationLibrary(request):
+    #log = log.get_logger('vdi')
     db_apps = Application.objects.all()
     for app in db_apps:
         if not request.user.has_perm('vdi.use_%s' % app.name):

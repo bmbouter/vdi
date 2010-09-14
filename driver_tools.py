@@ -1,6 +1,6 @@
 from vdi.models import Instance
 from opus.lib import log
-log = log.getLogger()
+log = log.get_logger('vdi')
 
 from django.conf import settings
 from django.db.models.query import QuerySet

@@ -8,7 +8,7 @@ from vdi.models import UserExperience, Application, Instance
 from vdi import user_experience_tools, cost_tools
 
 from opus.lib import log
-log = log.getLogger()
+log = log.get_logger('vdi')
 
 
 class CostToolsTest(TestCase):

@@ -66,7 +66,7 @@ def convert_timedelta_to_seconds(timedelta):
 
 def process_user_connections(app_node):
     from opus.lib import log
-    log = log.getLogger()
+    log = log.get_logger('vdi')
     user_experience = UserExperience.objects.exclude(connection_closed__isnull=False)
     for user_exp in user_experience:
         for session in app_node.sessions:
