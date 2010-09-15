@@ -25,10 +25,10 @@ import connection_tools
 import cost_tools
 
 from opus.lib import osutils, log
+log = log.get_logger('vdi')
 
 @login_required
 def applicationLibrary(request):
-    #log = log.get_logger('vdi')
     db_apps = Application.objects.all()
     for app in db_apps:
         if not request.user.has_perm('vdi.use_%s' % app.name):
@@ -83,7 +83,7 @@ def connect(request, app_pk=None, conn_type=None):
         log.debug('Found user ip of %s' % request.META["REMOTE_ADDR"])
 
         # Grab the proper osutils object
-        osutil_obj = osutils.get_os_object(host.ip, settings.MEDIA_ROOT + str(cluster.app.ssh_key))
+        osutil_obj = osutils.get_os_object(host.ip, settings.OPUS_SECURE_UPLOADS + str(cluster.app.ssh_key))
         if osutil_obj:    
             status, error_string = osutil_obj.add_user(request.user.username, password)
             if status == False:
